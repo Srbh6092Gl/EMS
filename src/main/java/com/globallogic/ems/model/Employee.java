@@ -1,5 +1,8 @@
 package com.globallogic.ems.model;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Employee {
 	
 	private String firstName;
@@ -8,6 +11,10 @@ public class Employee {
 	private String password;
 	private String address;
 	private String contactNo;
+	
+	public Employee() {
+		
+	}
 	
 	public Employee(String firstName, String lastName, String username, String password, String address,
 			String contactNo) {

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.globallogic.ems.model.Employee;
 
@@ -73,4 +74,90 @@ public class EmployeeRepository {
 		//Returning the list of employee objects fetched from employee table
 		return list;
 	}
+	
+	//Add employee to table employee
+	public static String addEmployee(Employee employee) {
+		
+		//Getting values of employee
+		String firstName = employee.getFirstName();
+		String lastName = employee.getLastName();
+		String username = employee.getUsername();
+		String password = employee.getPassword();
+		String address = employee.getAddress();
+		String contactNo = employee.getContactNo();
+		
+		//Query to insert values of employee in employee table
+		String addQuery = "INSERT INTO employee VALUES ("
+							+firstName+","
+							+lastName+","
+							+username+","
+							+password+","
+							+address+","
+							+contactNo+")";
+		
+		try {
+			//Executing query
+			statement.execute(addQuery);
+			System.out.println("SUCCESS");
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			System.out.println("FAILURE");
+			//Returning Failure as response on encountering an exception
+			return "FAILURE";
+			
+		}
+		
+		//Returning Success as Response if we reached till here
+		return "SUCCESS";
+	}
+	
+	//Delete row with username from employee table
+	public static String delete(String username) {
+		
+		//Query to delete row with username
+		String deleteQuery = "DELETE FROM employee WHERE username='"+username+"'";
+		try {
+			
+			//Executing query
+			statement.executeUpdate(deleteQuery);
+			//Returning Success as Response if we reached till here
+			return "DELETE SUCCESS";
+			
+		} catch (SQLException e) {
+			
+			System.out.println("DELETE FAIL");
+			e.printStackTrace();
+			//Returning Failure as response on encountering an exception
+			return "DELETE FAIL";
+			
+		}
+	}
+	
+	//Updating row with username key with values of map
+	public static void update(String key, Map<String,Object> map) {
+		
+		//For each key value pair
+		map.forEach((k,v)->{
+			
+			//if any value is not null
+			if(v!=null) {
+				
+				//query to update the v at column k
+				String updateQuery = "UPDATE employee SET "+k+"="+v.toString()+" WHERE username="+key;
+				
+				try {
+					statement.executeUpdate(updateQuery);
+				} catch (SQLException e) {
+					e.printStackTrace();
+					//Returning Failure as response on encountering an exception at any column
+					System.out.println("FAILURE");
+				}
+				
+			}
+			
+		});
+	}
+	
 }
