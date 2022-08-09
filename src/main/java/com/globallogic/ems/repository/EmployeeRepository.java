@@ -87,13 +87,13 @@ public class EmployeeRepository {
 		String contactNo = employee.getContactNo();
 		
 		//Query to insert values of employee in employee table
-		String addQuery = "INSERT INTO employee VALUES ("
-							+firstName+","
-							+lastName+","
-							+username+","
-							+password+","
-							+address+","
-							+contactNo+")";
+		String addQuery = "INSERT INTO employee VALUES ('"
+							+firstName+"','"
+							+lastName+"','"
+							+username+"','"
+							+password+"','"
+							+address+"','"
+							+contactNo+"')";
 		
 		try {
 			//Executing query
@@ -136,28 +136,61 @@ public class EmployeeRepository {
 	}
 	
 	//Updating row with username key with values of map
-	public static void update(String key, Map<String,Object> map) {
+	public static String update(String key, Employee employee) {
 		
-		//For each key value pair
-		map.forEach((k,v)->{
-			
-			//if any value is not null
-			if(v!=null) {
-				
-				//query to update the v at column k
-				String updateQuery = "UPDATE employee SET "+k+"="+v.toString()+" WHERE username="+key;
-				
-				try {
-					statement.executeUpdate(updateQuery);
-				} catch (SQLException e) {
-					e.printStackTrace();
-					//Returning Failure as response on encountering an exception at any column
-					System.out.println("FAILURE");
-				}
-				
-			}
-			
-		});
+		//Getting values of employee
+		String firstName = employee.getFirstName();
+		String lastName = employee.getLastName();
+		String username = employee.getUsername();
+		String password = employee.getPassword();
+		String address = employee.getAddress();
+		String contactNo = employee.getContactNo();
+		
+		//Initializing a string to store the changes according to MySQL query format
+		String changes ="";
+		
+		//If firstName is not null, add to changes
+		if(firstName != null)
+			changes = changes + "first_name='" + firstName +"',";
+		
+		//If lastName is not null, add to changes
+		if(lastName != null)
+			changes = changes + "last_name='" + lastName +"',";
+		
+		//If username is not null, add to changes
+		if(username != null)
+			changes = changes + "username='" + username +"',";
+		
+		//If password is not null, add to changes
+		if(password != null)
+			changes = changes + "password='" + password +"',";
+		
+		//If address is not null, add to changes
+		if(address != null)
+			changes = changes + "address='" + address +"',";
+		
+		//If contactNo is not null, add to changes
+		if(contactNo != null)
+			changes = changes + "contact_no='" + contactNo +"'";
+		
+		//Removing a "," from the String if it is present at the last index
+		if(changes.charAt(changes.length()-1) == ',')
+			changes=changes.substring(0,changes.length()-1);
+
+		//query to update the v at column k
+		String updateQuery = "UPDATE employee SET "+changes+" WHERE username='"+key+"'";
+		
+		try {
+			//Executing query
+			statement.executeUpdate(updateQuery);
+			//Returning Success as Response if we reached till here
+			return "SUCCESS";
+		} catch (SQLException e) {
+			e.printStackTrace();
+			//Returning Failure as response on encountering an exception at any column
+			return "FAILURE";
+		}
+		
 	}
 	
 }
